@@ -39,8 +39,7 @@ This integration's authentication and API-fetching layer
 licensed) - an MCP server for AI assistants that reverse-engineered
 Coros's unofficial web + mobile APIs, including the mobile API's
 AES-128-CBC login scheme (key pulled from `libencrypt-lib.so` in the
-Coros Android APK). That reverse-engineering work is the hard part this
-integration builds on; full credit belongs there. This repo adapts it
+Coros Android APK). This repo adapts it
 into Home Assistant's config flow / coordinator / entity model, and drops
 what a sensor integration doesn't need (the original's SQLite cache,
 keyring-based token storage, and workout/schedule-management endpoints).
