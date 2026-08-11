@@ -1,15 +1,14 @@
 """Coros Training Hub API client.
 
-Adapted from cygnusb/coros-mcp (MIT license): https://github.com/cygnusb/coros-mcp
-Full credit for reverse-engineering the auth flow - including the mobile
-API's AES-128-CBC scheme (key pulled from libencrypt-lib.so in the Coros
-Android APK) - belongs to that project. See this repo's README Credits
-section for the full attribution. This port trims the original down to
-what a Home Assistant sensor integration needs (auth + read-only fetches)
-and drops its SQLite cache, keyring-based token storage, and
-workout/schedule-management endpoints - none of which apply here, since
-Home Assistant's own config entry storage and DataUpdateCoordinator
-already cover that ground.
+Adapted from cygnusb/coros-mcp (MIT license):
+https://github.com/cygnusb/coros-mcp - including the mobile API's
+AES-128-CBC scheme (key pulled from libencrypt-lib.so in the Coros
+Android APK). See this repo's README Credits section for the full
+attribution. This port trims the original down to what a Home Assistant
+sensor integration needs (auth + read-only fetches) and drops its SQLite
+cache, keyring-based token storage, and workout/schedule-management
+endpoints - none of which apply here, since Home Assistant's own config
+entry storage and DataUpdateCoordinator already cover that ground.
 
 Auth mechanism: MD5-hashed password + accessToken header (web API).
 HRV data comes from /dashboard/query (last 7 days of nightly RMSSD).
