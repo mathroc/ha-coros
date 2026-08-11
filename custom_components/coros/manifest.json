@@ -1,0 +1,12 @@
+{
+  "domain": "coros",
+  "name": "Coros",
+  "codeowners": ["@KoenradusXLVIII"],
+  "config_flow": true,
+  "documentation": "https://github.com/KoenradusXLVIII/ha-coros",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/KoenradusXLVIII/ha-coros/issues",
+  "requirements": ["httpx>=0.27.0", "cryptography>=42.0.0"],
+  "version": "0.1.0"
+}

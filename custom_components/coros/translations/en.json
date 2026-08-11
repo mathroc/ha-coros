@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Coros",
+        "data": {
+          "email": "Email",
+          "password": "Password",
+          "region": "Region"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate with Coros",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password.",
+      "cannot_connect": "Could not connect to Coros."
+    },
+    "abort": {
+      "already_configured": "This Coros account is already configured.",
+      "reauth_successful": "Reauthentication was successful."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "hrv": { "name": "HRV" },
+      "resting_heart_rate": { "name": "Resting heart rate" },
+      "training_load": { "name": "Training load" },
+      "vo2max": { "name": "VO2 max" },
+      "stamina_level": { "name": "Stamina level" },
+      "sleep_duration": { "name": "Sleep duration" },
+      "sleep_deep_minutes": { "name": "Deep sleep" },
+      "sleep_light_minutes": { "name": "Light sleep" },
+      "sleep_rem_minutes": { "name": "REM sleep" },
+      "sleep_awake_minutes": { "name": "Awake" }
+    }
+  }
+}
