@@ -5,9 +5,11 @@ Auth/fetch layer adapted from cygnusb/coros-mcp (MIT) - see README Credits.
 
 from __future__ import annotations
 
+import dataclasses
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -68,8 +70,8 @@ class CorosDataUpdateCoordinator(DataUpdateCoordinator[CorosData]):
         sleep_records: list[SleepRecord] = []
 
         return CorosData(
-            latest_daily=daily_records[-1] if daily_records else None,
-            latest_hrv=hrv_records[-1] if hrv_records else None,
+            latest_daily=_latest_values(daily_records),
+            latest_hrv=_latest_values(hrv_records),
             latest_sleep=sleep_records[-1] if sleep_records else None,
         )
 
@@ -81,3 +83,21 @@ class CorosDataUpdateCoordinator(DataUpdateCoordinator[CorosData]):
                 self.entry,
                 data={**self.entry.data, "auth": self.auth.as_dict()},
             )
+
+
+def _latest_values(records: list[Any]) -> Any | None:
+    """Newest record, with each empty field filled from the most recent day
+    that has a value. Today's record is empty until the watch syncs (e.g.
+    last night's HRV), which otherwise leaves every sensor unknown."""
+    if not records:
+        return None
+    merged = dataclasses.replace(records[-1])
+    for field in dataclasses.fields(merged):
+        if getattr(merged, field.name) is not None:
+            continue
+        for record in reversed(records[:-1]):
+            value = getattr(record, field.name)
+            if value is not None:
+                setattr(merged, field.name, value)
+                break
+    return merged
