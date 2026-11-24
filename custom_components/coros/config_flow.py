@@ -45,6 +45,7 @@ class CorosConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     user_input[CONF_EMAIL],
                     user_input[CONF_PASSWORD],
                     user_input[CONF_REGION],
+                    skip_mobile=True,  # local patch: mobile login logs the Coros app out
                 )
             except api.CorosAPIError:
                 _LOGGER.debug("Coros login rejected", exc_info=True)
@@ -83,6 +84,7 @@ class CorosConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._reauth_entry.data[CONF_EMAIL],
                     user_input[CONF_PASSWORD],
                     self._reauth_entry.data[CONF_REGION],
+                    skip_mobile=True,  # local patch: mobile login logs the Coros app out
                 )
             except api.CorosAPIError:
                 errors["base"] = "invalid_auth"

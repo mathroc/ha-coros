@@ -62,16 +62,10 @@ class CorosDataUpdateCoordinator(DataUpdateCoordinator[CorosData]):
         except Exception as err:
             raise UpdateFailed(f"Error communicating with Coros: {err}") from err
 
+        # Local patch: sleep comes from the Coros *mobile* API, whose login
+        # (and token replay) logs the official Coros app out. Skip it entirely;
+        # sleep sensors stay empty, web-API sensors are unaffected.
         sleep_records: list[SleepRecord] = []
-        try:
-            sleep_records = await api.fetch_sleep(self.auth, start, end)
-        except Exception:
-            # Sleep uses a separate mobile-API session that can go stale
-            # independently of the web token - don't fail the whole update
-            # over it, just skip sleep sensors this cycle.
-            _LOGGER.debug("Coros sleep fetch failed this cycle", exc_info=True)
-
-        self._persist_refreshed_mobile_token()
 
         return CorosData(
             latest_daily=daily_records[-1] if daily_records else None,
