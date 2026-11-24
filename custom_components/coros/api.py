@@ -386,6 +386,30 @@ async def fetch_daily_records(auth: StoredAuth, start_day: str, end_day: str) ->
 
     _check_response(detail_body, "analyse")
 
+    # TEMP debug: find where VO2max / stamina live in the responses
+    def _shape(obj: object, depth: int = 0) -> object:
+        if isinstance(obj, dict):
+            return {k: _shape(v, depth + 1) if depth < 2 else type(v).__name__ for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [f"list[{len(obj)}]", _shape(obj[-1], depth + 1)] if obj and depth < 3 else f"list[{len(obj)}]"
+        return obj
+
+    def _hits(obj: object, path: str = "") -> list[str]:
+        out: list[str] = []
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if any(s in k.lower() for s in ("vo2", "stamina", "fitness", "lthr", "ltsp")):
+                    out.append(f"{path}.{k}={v!r}"[:200])
+                out += _hits(v, f"{path}.{k}")
+        elif isinstance(obj, list) and obj:
+            out += _hits(obj[-1], f"{path}[-1]")
+        return out
+
+    _LOGGER.debug("COROS DEBUG analyse result=%s shape=%s", analyse_body.get("result"), _shape(analyse_body.get("data")))
+    _LOGGER.debug("COROS DEBUG analyse hits=%s", _hits(analyse_body.get("data")))
+    _LOGGER.debug("COROS DEBUG dayDetail shape=%s", _shape(detail_body.get("data")))
+    _LOGGER.debug("COROS DEBUG dayDetail hits=%s", _hits(detail_body.get("data")))
+
     records_by_date: dict[str, DailyRecord] = {}
     for item in detail_body.get("data", {}).get("dayList", []):
         rec = _parse_daily_record(item)
